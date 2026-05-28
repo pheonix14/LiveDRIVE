@@ -4,8 +4,10 @@ FROM caddy:2-alpine AS caddy_bin
 # Stage 2: Build the main Python application image
 FROM python:3.11-slim
 
-# Copy the static Caddy binary into the runtime environment
-COPY --from=caddy_bin /usr/bin/caddy /usr/bin/caddy
+# Copy the static Caddy binary into a temporary path, then use cp to strip capabilities
+# (capabilities like cap_net_bind_service cause EPERM in secure sandboxes like Render)
+COPY --from=caddy_bin /usr/bin/caddy /usr/bin/caddy_temp
+RUN cp /usr/bin/caddy_temp /usr/bin/caddy && rm /usr/bin/caddy_temp && chmod +x /usr/bin/caddy
 
 # Prevent Python from writing .pyc files and buffer stdout/stderr
 ENV PYTHONDONTWRITEBYTECODE=1 \
