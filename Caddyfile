@@ -1,0 +1,12 @@
+:{$PORT} {
+    # Route WebSocket signaling relay requests to server.py
+    handle /ws/* {
+        uri strip_prefix /ws
+        reverse_proxy localhost:8765
+    }
+
+    # Route all other web and Socket.IO requests to main.py
+    handle {
+        reverse_proxy localhost:8080
+    }
+}

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy | LiveDRIVE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;500;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #F2C12E;
+            --bg: #0a0a0c;
+            --card: #121216;
+            --border: rgba(255, 255, 255, 0.08);
+        }
+        body { 
+            background: var(--bg); color: #fff; font-family: 'Outfit', sans-serif; 
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(242, 193, 46, 0.04) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(239, 159, 39, 0.04) 0%, transparent 40%);
+        }
+        .bebas { font-family: 'Bebas Neue', sans-serif; letter-spacing: 1px; }
+        .glass {
+            background: rgba(18, 18, 22, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-center p-6 md:p-12 min-h-screen">
+
+    <div class="w-full max-w-3xl space-y-8 z-10">
+        
+        <!-- Header -->
+        <header class="text-center space-y-3">
+            <h1 class="text-6xl font-black text-white bebas">PRIVACY <span class="text-[#F2C12E]">POLICY</span></h1>
+            <p class="text-sm text-white/50 uppercase tracking-[0.2em]">Absolute Anonymity, Zero Tracking, Client-First.</p>
+        </header>
+
+        <!-- Main Policy Content -->
+        <div class="glass rounded-[2rem] p-8 md:p-10 space-y-6 border-t-2 border-[#F2C12E]/30">
+            
+            <section class="space-y-3">
+                <h2 class="text-lg font-bold text-[#F2C12E] uppercase tracking-wider">1. No Accounts, No Credentials</h2>
+                <p class="text-white/70 text-sm leading-relaxed">
+                    LiveDRIVE does not offer logins, sign-ups, or user accounts. There are no usernames, passwords, or emails stored on any backend database. Every visitor is completely anonymous. A random nickname (e.g. <span class="mono text-white">GhostReel_447</span>) is generated locally upon your first visit.
+                </p>
+            </section>
+
+            <section class="space-y-3">
+                <h2 class="text-lg font-bold text-[#F2C12E] uppercase tracking-wider">2. Local-Only Storage</h2>
+                <p class="text-white/70 text-sm leading-relaxed">
+                    All persistent configurations—such as your randomly-generated identity, room access lists, chat logs, customized control settings (loop modes, shuffle states), and playlist queues—are written directly to your browser's <span class="mono text-white">localStorage</span>. This information never leaves your device unless broadcast to peers in your current theater room.
+                </p>
+            </section>
+
+            <section class="space-y-3">
+                <h2 class="text-lg font-bold text-[#F2C12E] uppercase tracking-wider">3. Real-Time Peer Synchronization</h2>
+                <p class="text-white/70 text-sm leading-relaxed">
+                    When inside a theater room, playback synchronization commands (play, pause, seek, buffering states, and chat messages) are relayed in real-time through standard WebSocket channels or BroadcastChannel (for same-device loops). The signaling server functions purely as a message dispatcher and does not write message contents, chat history, or room settings to disk.
+                </p>
+            </section>
+
+            <section class="space-y-3">
+                <h2 class="text-lg font-bold text-[#F2C12E] uppercase tracking-wider">4. Third-Party Media Sources</h2>
+                <p class="text-white/70 text-sm leading-relaxed">
+                    LiveDRIVE allows users to play videos hosted on YouTube, Vimeo, Google Drive, and other streaming targets. When using these sources, you are subject to the respective platform's privacy policy and data collection protocols. LiveDRIVE itself does not track what videos are loaded.
+                </p>
+            </section>
+
+            <section class="space-y-3">
+                <h2 class="text-lg font-bold text-[#F2C12E] uppercase tracking-wider">5. Policy Modifications</h2>
+                <p class="text-white/70 text-sm leading-relaxed">
+                    Because we do not store emails or contact information, we cannot notify users of privacy updates. You can check back on this page periodically to verify the terms of our client-side architecture.
+                </p>
+            </section>
+
+        </div>
+
+        <!-- Footer Link -->
+        <div class="text-center pt-4">
+            <a href="/" class="text-xs text-white/40 hover:text-white uppercase tracking-widest transition-colors">&larr; Back to Theater</a>
+        </div>
+    </div>
+
+</body>
+</html>

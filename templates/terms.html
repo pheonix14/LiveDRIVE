@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms of Service | LiveDRIVE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;500;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #F2C12E;
+            --bg: #0a0a0c;
+            --card: #121216;
+            --border: rgba(255, 255, 255, 0.08);
+        }
+        body { 
+            background: var(--bg); color: #fff; font-family: 'Outfit', sans-serif; 
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(242, 193, 46, 0.04) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(239, 159, 39, 0.04) 0%, transparent 40%);
+        }
+        .bebas { font-family: 'Bebas Neue', sans-serif; letter-spacing: 1px; }
+        .glass {
+            background: rgba(18, 18, 22, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-center p-6 md:p-12 min-h-screen">
+
+    <div class="w-full max-w-3xl space-y-8 z-10">
+        
+        <!-- Header -->
+        <header class="text-center space-y-3">
+            <h1 class="text-6xl font-black text-white bebas">TERMS OF <span class="text-[#F2C12E]">SERVICE</span></h1>
+            <p class="text-sm text-white/50 uppercase tracking-[0.2em]">Cinematic Watch-Together Guidelines & Open-Source Compliance</p>
+        </header>
+
+        <!-- Main Terms Content -->
+        <div class="glass rounded-[2rem] p-8 md:p-10 space-y-6 border-t-2 border-[#F2C12E]/30">
+            
+            <section class="space-y-3">
+                <h2 class="text-lg font-bold text-[#F2C12E] uppercase tracking-wider">1. Open-Source Status</h2>
+                <p class="text-white/70 text-sm leading-relaxed">
+                    LiveDRIVE is open-source software distributed for personal and collaborative entertainment purposes. The code is shared as-is. Users are free to review, inspect, host, and self-deploy the repository, subject to appropriate open-source attribution.
+                </p>
+            </section>
+
+            <section class="space-y-3">
+                <h2 class="text-lg font-bold text-[#F2C12E] uppercase tracking-wider">2. Video Source Link Liability</h2>
+                <p class="text-white/70 text-sm leading-relaxed">
+                    LiveDRIVE is a browser-based visualization and state synchronization tool. We do not host, store, stream, or index any video files or links. Users are entirely responsible for the legality, copyright compliance, and integrity of URLs they paste into their custom queues or chat feeds.
+                </p>
+            </section>
+
+            <section class="space-y-3">
+                <h2 class="text-lg font-bold text-[#F2C12E] uppercase tracking-wider">3. Fair Server Usage</h2>
+                <p class="text-white/70 text-sm leading-relaxed">
+                    Our public Websocket signaling channels are provided free of charge. Any attempt to abuse, flood, or exploit the messaging relay channels or telemetry API nodes will result in immediate network blocks and rate-limiting.
+                </p>
+            </section>
+
+            <section class="space-y-3">
+                <h2 class="text-lg font-bold text-[#F2C12E] uppercase tracking-wider">4. Disclaimer of Warranty</h2>
+                <p class="text-white/70 text-sm leading-relaxed text-justify">
+                    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE.
+                </p>
+            </section>
+
+        </div>
+
+        <!-- Footer Link -->
+        <div class="text-center pt-4">
+            <a href="/" class="text-xs text-white/40 hover:text-white uppercase tracking-widest transition-colors">&larr; Back to Theater</a>
+        </div>
+    </div>
+
+</body>
+</html>

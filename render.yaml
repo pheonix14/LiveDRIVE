@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: livedrive
+    env: docker
+    dockerfilePath: Dockerfile
+    plan: free
+    envVars:
+      - key: PORT
+        value: 8080
+      - key: SELF_URL
+        sync: false
+        description: "The public URL of your LiveDRIVE deployment (e.g., https://livedrive.onrender.com). If empty, self-pings are skipped."

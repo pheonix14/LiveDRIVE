@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWAKE | Multi-Pulse Kernel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --accent: #4ade80;
+            --bg: #000;
+            --glass: rgba(10, 10, 10, 0.5);
+        }
+        body { 
+            background: var(--bg); color: #fff; font-family: 'Outfit', sans-serif; 
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 0% 0%, rgba(74, 222, 128, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 100% 100%, rgba(74, 222, 128, 0.05) 0%, transparent 50%);
+        }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        
+        .glass {
+            background: var(--glass);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .stat-value {
+            font-size: 3rem;
+            font-weight: 800;
+            letter-spacing: -2px;
+            line-height: 1;
+        }
+ 
+        .pulse-ring {
+            width: 10px; height: 10px; border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 0 10px var(--accent);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(74, 222, 128, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
+        }
+ 
+        #logs::-webkit-scrollbar { width: 4px; }
+        #logs::-webkit-scrollbar-thumb { background: rgba(74, 222, 128, 0.2); border-radius: 2px; }
+        
+        .btn-primary {
+            background: #fff;
+            color: #000;
+            font-weight: 800;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .btn-primary:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 20px rgba(255,255,255,0.2);
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center p-6 md:p-12 relative">
+    
+    <div class="w-full max-w-5xl space-y-8 z-10">
+        
+        <header class="flex flex-col md:flex-row justify-between items-end gap-4 pb-4">
+            <div>
+                <h1 class="text-6xl font-black tracking-tighter text-white">AWAKE <span class="text-green-400">V2</span></h1>
+                <div class="flex items-center gap-2 text-[10px] mono text-white/40 uppercase tracking-[0.3em] bg-white/5 px-3 py-1.5 rounded-full border border-white/10 mt-2">
+                    <span class="pulse-ring"></span>
+                    <span>Multi-Pulse Kernel Active</span>
+                </div>
+            </div>
+            <div class="text-right flex flex-col items-end">
+                <div class="text-[10px] mono text-white/30 uppercase tracking-widest bg-white/5 px-4 py-2 rounded-xl">
+                    Nodes: <span id="active-count" class="text-green-400 font-bold">0</span> | Uptime: <span id="uptime" class="text-white">0s</span>
+                </div>
+            </div>
+        </header>
+ 
+        <!-- Stats Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Heartbeats Received -->
+            <div class="glass p-8 rounded-3xl relative overflow-hidden transition-transform hover:scale-[1.01]">
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-green-400 to-transparent opacity-50"></div>
+                <p class="text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-2">Heartbeats Received</p>
+                <div class="flex items-baseline gap-2">
+                    <span id="pings-received" class="stat-value mono text-white drop-shadow-lg">00</span>
+                    <span class="text-white/30 text-xs mono uppercase">Pulses</span>
+                </div>
+                <p class="text-[9px] text-white/20 mt-4 mono uppercase">Inbound Sync Active</p>
+            </div>
+ 
+            <!-- Heartbeats Sent -->
+            <div class="glass p-8 rounded-3xl relative overflow-hidden transition-transform hover:scale-[1.01]">
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-400 to-transparent opacity-50"></div>
+                <p class="text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-2">Pulses Dispatched</p>
+                <div class="flex items-baseline gap-2">
+                    <span id="total-pings" class="stat-value mono text-white drop-shadow-lg">00</span>
+                    <span class="text-white/30 text-xs mono uppercase">Hits</span>
+                </div>
+                <p class="text-[9px] text-white/20 mt-4 mono uppercase">Outbound Network Stable</p>
+            </div>
+        </div>
+ 
+        <!-- Link Addition -->
+        <div class="glass rounded-[2rem] p-2 flex flex-col md:flex-row gap-2">
+            <input type="text" id="new-url" class="flex-1 bg-transparent rounded-2xl px-6 py-4 mono text-sm outline-none focus:bg-white/5 transition-all" placeholder="Enter target URL (e.g. fafnir.render.com)">
+            <button onclick="addLink()" class="btn-primary px-10 py-4 rounded-2xl uppercase tracking-widest text-xs">Deploy Pulse</button>
+        </div>
+ 
+        <main class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Link Monitor -->
+            <div class="lg:col-span-2 space-y-4">
+                <div class="glass rounded-[2rem] overflow-hidden">
+                    <div class="px-6 py-4 border-b border-white/5 flex justify-between items-center bg-white/5">
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-white/50">Pulse Monitor</span>
+                        <span class="text-[9px] mono text-white/20">Real-time status</span>
+                    </div>
+                    <div id="link-list" class="divide-y divide-white/5 min-h-[200px]">
+                        <div class="p-12 text-center text-white/20 mono text-xs">No active pulses detected.</div>
+                    </div>
+                </div>
+            </div>
+ 
+            <!-- Kernel Log -->
+            <div class="glass rounded-[2rem] overflow-hidden flex flex-col h-[400px]">
+                <div class="px-6 py-4 border-b border-white/5 bg-white/5 flex justify-between items-center">
+                    <span class="text-[10px] font-bold uppercase tracking-widest text-white/50">Kernel Log</span>
+                    <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                </div>
+                <div id="logs" class="flex-1 overflow-y-auto p-6 space-y-2 mono text-[10px]">
+                    <div class="text-white/20 italic">Initializing kernel telemetry...</div>
+                </div>
+            </div>
+        </main>
+    </div>
+ 
+    <script>
+        async function fetchStatus() {
+            try {
+                const res = await fetch('/api/status');
+                const data = await res.json();
+                renderUI(data);
+            } catch (e) {
+                console.error("Kernel Sync Error", e);
+            }
+        }
+ 
+        function renderUI(data) {
+            const list = document.getElementById('link-list');
+            const logs = document.getElementById('logs');
+            const activeCount = document.getElementById('active-count');
+            const uptime = document.getElementById('uptime');
+            const received = document.getElementById('pings-received');
+            const totalPings = document.getElementById('total-pings');
+ 
+            activeCount.innerText = data.targets.length;
+            uptime.innerText = data.uptime || '0s';
+            received.innerText = data.pings_received.toString().padStart(2, '0');
+            
+            let total = 0;
+            data.targets.forEach(t => total += t.pings);
+            totalPings.innerText = total.toString().padStart(2, '0');
+ 
+            if (data.targets.length === 0) {
+                list.innerHTML = '<div class="p-12 text-center text-white/20 mono text-xs">No active pulses detected.</div>';
+            } else {
+                list.innerHTML = data.targets.map(t => `
+                    <div class="px-6 py-5 flex items-center justify-between hover:bg-white/5 transition-colors">
+                        <div class="flex items-center gap-4">
+                            <div class="w-2 h-2 rounded-full ${t.is_active ? 'bg-green-400 shadow-[0_0_8px_rgba(74,222,128,0.5)]' : 'bg-red-500'}"></div>
+                            <div>
+                                <div class="text-sm font-bold tracking-tight">${t.url} ${t.label ? `<span class="ml-2 text-[8px] bg-white/10 px-1.5 py-0.5 rounded text-white/40 tracking-widest uppercase">${t.label}</span>` : ''}</div>
+                                <div class="text-[9px] mono text-white/30 uppercase">Last Pulse: ${t.last_ping || 'N/A'}</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-8">
+                            <div class="text-center">
+                                <div class="text-[9px] mono text-white/30 uppercase mb-1">Pulses</div>
+                                <div class="text-sm font-bold mono text-green-400">${t.pings}</div>
+                            </div>
+                            <div class="flex gap-2">
+                                <button onclick="toggleLink('${t.url}')" class="p-2 hover:bg-white/10 rounded-lg transition-colors">
+                                    <svg class="w-4 h-4 text-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${t.is_active ? 'M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z' : 'M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z'}"></path></svg>
+                                </button>
+                                <button onclick="removeLink('${t.url}')" class="p-2 hover:bg-red-500/20 rounded-lg transition-colors group">
+                                    <svg class="w-4 h-4 text-white/30 group-hover:text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+ 
+            logs.innerHTML = data.logs.slice().reverse().map(l => {
+                let color = l.includes('FAIL') ? 'text-red-400' : (l.includes('WARN') ? 'text-yellow-400' : (l.includes('INBOUND') ? 'text-green-400 font-bold' : 'text-white/50'));
+                if (l.includes('SYSTEM')) color = 'text-green-400 font-bold border-l-2 border-green-500 pl-2';
+                return `<div class="${color} py-1.5 border-b border-white/5 mb-1">${l}</div>`;
+            }).join('');
+        }
+ 
+        async function addLink() {
+            const input = document.getElementById('new-url');
+            const url = input.value.trim();
+            if (!url) return;
+            await fetch('/api/add', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url })
+            });
+            input.value = '';
+            fetchStatus();
+        }
+ 
+        async function removeLink(url) {
+            if (!confirm(`Terminate pulse for ${url}?`)) return;
+            await fetch('/api/remove', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url })
+            });
+            fetchStatus();
+        }
+ 
+        async function toggleLink(url) {
+            await fetch('/api/toggle', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url })
+            });
+            fetchStatus();
+        }
+ 
+        setInterval(fetchStatus, 1000);
+        fetchStatus();
+    </script>
+ 
+</body>
+</html>
