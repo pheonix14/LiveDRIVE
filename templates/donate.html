@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support LiveDRIVE | Keep Us Awake</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;500;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #F2C12E;
+            --amber: #EF9F27;
+            --bg: #0a0a0c;
+            --card: #121216;
+            --border: rgba(255, 255, 255, 0.08);
+        }
+        body { 
+            background: var(--bg); color: #fff; font-family: 'Outfit', sans-serif; 
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(242, 193, 46, 0.04) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(239, 159, 39, 0.04) 0%, transparent 40%);
+        }
+        .bebas { font-family: 'Bebas Neue', sans-serif; letter-spacing: 1px; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .glass {
+            background: rgba(18, 18, 22, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+        }
+        .btn-gold {
+            background: linear-gradient(135deg, var(--gold), var(--amber));
+            color: #000;
+            font-weight: 800;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .btn-gold:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(242, 193, 46, 0.35);
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-center p-6 md:p-12 min-h-screen">
+
+    <div class="w-full max-w-2xl space-y-8 z-10">
+        
+        <!-- Header -->
+        <header class="text-center space-y-3">
+            <h1 class="text-6xl font-black tracking-tight text-white bebas">SUPPORT <span class="text-[#F2C12E]">LIVEDRIVE</span></h1>
+            <p class="text-sm text-white/50 max-w-md mx-auto uppercase tracking-[0.2em]">Open Source & Free Forever. Supported by you.</p>
+        </header>
+
+        <!-- Main Card -->
+        <div class="glass rounded-[2rem] p-8 md:p-10 space-y-6 text-center border-t-2 border-[#F2C12E]/30 relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-32 h-32 bg-[#F2C12E]/10 rounded-full blur-3xl"></div>
+            
+            <h2 class="text-2xl font-bold">Why Donate?</h2>
+            
+            <p class="text-white/70 text-sm leading-relaxed max-w-lg mx-auto">
+                LiveDRIVE is built by developers who believe watch together rooms should be fast, zero-auth, private, and customizable. We don't run trackers, we don't serve ads, and we don't sell your data.
+            </p>
+            <p class="text-white/70 text-sm leading-relaxed max-w-lg mx-auto">
+                Server hosting, bandwidth, and maintaining our active telemetry loops require resources. If you find LiveDRIVE useful, consider donating to keep our theater running.
+            </p>
+
+            <hr class="border-white/5">
+
+            <!-- Address Section -->
+            <div class="space-y-4">
+                <div class="text-[10px] font-bold text-white/40 uppercase tracking-[0.25em]">Litecoin Donation Address</div>
+                
+                <div class="bg-black/40 border border-white/5 rounded-2xl p-4 flex flex-col md:flex-row items-center justify-between gap-4">
+                    <span id="ltcAddress" class="mono text-xs text-[#F2C12E] select-all break-all text-center md:text-left">ltc1q68v0ss6rjzt89rx4ll0e4c8fl657wej2lzngsg</span>
+                    <button onclick="copyAddress()" class="btn-gold px-6 py-2.5 rounded-xl uppercase tracking-widest text-[10px] whitespace-nowrap">Copy Address</button>
+                </div>
+            </div>
+
+            <!-- QR Code Placeholder/GitHub assets -->
+            <div class="flex justify-center pt-2">
+                <div class="bg-white/5 p-4 rounded-3xl border border-white/10 flex flex-col items-center">
+                    <img class="rounded-xl w-60 h-auto" alt="Litecoin QR Code" src="https://github.com/user-attachments/assets/8d83b1e1-ae37-4502-a5d9-9a34b909f7bc" />
+                    <span class="text-[9px] text-white/30 uppercase tracking-widest mt-3">Scan with your LTC wallet</span>
+                </div>
+            </div>
+
+            <div id="toast" class="hidden fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-black border border-[#F2C12E] px-6 py-3 rounded-full text-xs text-[#F2C12E] tracking-wider uppercase font-bold transition-all shadow-[0_0_15px_rgba(242,193,46,0.2)]">
+                Address Copied!
+            </div>
+        </div>
+
+        <!-- Footer Link -->
+        <div class="text-center pt-4">
+            <a href="/" class="text-xs text-white/40 hover:text-white uppercase tracking-widest transition-colors">&larr; Back to Theater</a>
+        </div>
+    </div>
+
+    <script>
+        function copyAddress() {
+            const address = document.getElementById("ltcAddress").innerText;
+            navigator.clipboard.writeText(address).then(() => {
+                const toast = document.getElementById("toast");
+                toast.classList.remove("hidden");
+                setTimeout(() => {
+                    toast.classList.add("hidden");
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
