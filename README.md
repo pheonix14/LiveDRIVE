@@ -1,5 +1,5 @@
 # LiveDRIVE v5.7 — Watch Together, Anywhere, with Anyone
-https://livedrive.onrender.com/?room=HER-37FF
+https://livedrive.onrender.com/
 LiveDRIVE is the ultimate privacy-first, zero-authentication, real-time watch-together theater. It is designed to allow anyone to synchronized-watch videos from multiple sources (including direct video files, Google Drive links, HLS streams, YouTube, and Vimeo) without the friction of sign-ups, trackers, or subscription walls. 
 
 ---
