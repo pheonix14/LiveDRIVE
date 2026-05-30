@@ -3,17 +3,17 @@
   "targets": [
     {
       "url": "https://xtreme-f6jh.onrender.com",
-      "pings": 2,
+      "pings": 20,
       "success": 0,
-      "last_ping": "13:32:58",
+      "last_ping": "17:04:42",
       "is_active": true,
       "label": "CORE PULSE"
     },
     {
       "url": "https://xtreme-f6jh.onrender.com/hook",
-      "pings": 2,
+      "pings": 20,
       "success": 0,
-      "last_ping": "13:33:06",
+      "last_ping": "17:04:49",
       "is_active": true,
       "label": "TELEMETRY HOOK"
     }

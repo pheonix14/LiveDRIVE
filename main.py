@@ -715,5 +715,19 @@ def buffering(data):
 
 # ---------- Run ----------
 if __name__ == "__main__":
+    def run_websocket_relay():
+        try:
+            import asyncio
+            import server
+            # Run the server's main loop inside this thread's event loop
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            loop.run_until_complete(server.main())
+        except Exception as e:
+            # Silence port conflicts if already running via run_all.py or other process
+            pass
+
+    threading.Thread(target=run_websocket_relay, daemon=True, name="WebsocketRelay").start()
+
     port = int(os.environ.get("PORT", 8080))
     socketio.run(app, host="0.0.0.0", port=port, allow_unsafe_werkzeug=True)
