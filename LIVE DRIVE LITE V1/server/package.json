@@ -1,0 +1,15 @@
+{
+  "name": "couple-sync-signaling-server",
+  "version": "1.0.0",
+  "description": "High-performance WebSockets signaling and sync relay server for Couple Sync Video Player APK",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node index.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "ws": "^8.17.1",
+    "cors": "^2.8.5"
+  }
+}
