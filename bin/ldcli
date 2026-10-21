@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+REAL_BIN="$(readlink -f "${BASH_SOURCE[0]}")"
+SCRIPT_DIR="$(dirname "$(dirname "$REAL_BIN")")"
+python3 "$SCRIPT_DIR/livedrive_cli.py" --cli "$@"

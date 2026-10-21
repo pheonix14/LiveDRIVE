@@ -1,0 +1,123 @@
+name: Deploy LiveDRIVE to GitHub Pages & Create Release
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: 'pages'
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: frontend/package.json
+
+      - name: Install Frontend Dependencies
+        working-directory: ./frontend
+        run: npm ci || npm install
+
+      - name: Build Next.js Static Export
+        working-directory: ./frontend
+        env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: npm run build
+
+      - name: Upload GitHub Pages Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./frontend/out
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  release:
+    runs-on: ubuntu-latest
+    needs: build-and-deploy
+    if: startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_dispatch'
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Build Frontend Export for Release Package
+        working-directory: ./frontend
+        run: |
+          npm ci || npm install
+          npm run build
+
+      - name: Package Backend and Static Frontend ZIPs
+        run: |
+          mkdir -p dist
+
+          # 1. Package Portable Backend (Render / Termux / PC)
+          zip -r dist/livedrive-backend.zip \
+            server.py \
+            main.py \
+            run_all.py \
+            livedrive_cli.py \
+            setup.bat \
+            setup.sh \
+            termux-start.sh \
+            livedrive.bat \
+            ld.bat \
+            ldui.bat \
+            ldcli.bat \
+            requirements.txt \
+            Caddyfile \
+            Dockerfile \
+            render.yaml \
+            README.md \
+            bin/
+
+          # 2. Package Pre-Built Static Frontend (GitHub Pages / Netlify / Self-host)
+          cd frontend/out && zip -r ../../dist/livedrive-static-ui.zip . && cd ../..
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/livedrive-backend.zip
+            dist/livedrive-static-ui.zip
+          name: LiveDRIVE Watch-Together Theater ${{ github.ref_name }}
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+          body: |
+            ## 🎬 LiveDRIVE Theater Release
+
+            ### 🚀 Highlights:
+            - **Frontend**: Fully decoupled Next.js static cinema theater hosted on **GitHub Pages**.
+            - **Backend Support**: Run your synchronized signaling server anywhere:
+              - ☁️ **Render.com** (via `render.yaml` or Docker)
+              - 📱 **Android Phone** (via `termux-start.sh`)
+              - 💻 **PC / Local** (via `setup.bat` or `setup.sh`)
+            - **In-App Relay Manager**: Switch backend connections in real-time from the UI without page reload.
+            - **Zero Mocks**: Real YouTube, Vimeo, HTML5 video, live HLS streams, Google Drive playback, and multi-tab synchronization.
+
+            ### 📦 Included Release Packages:
+            1. `livedrive-backend.zip`: Standalone portable relay server bundle for PC, Termux, and Render.
+            2. `livedrive-static-ui.zip`: Pre-built static cinema web app ready to drag-and-drop onto GitHub Pages or any static host.

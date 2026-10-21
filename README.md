@@ -1,77 +1,120 @@
-# LiveDRIVE v5.7 — Watch Together, Anywhere, with Anyone
-https://livedrive.onrender.com/
+# LiveDRIVE v6.0 — Watch Together, Anywhere, with Anyone
 
-LiveDRIVE is the ultimate privacy-first, zero-authentication, real-time watch-together theater. It is designed to allow anyone to synchronized-watch videos from multiple sources (including direct video files, Google Drive links, HLS streams, YouTube, and Vimeo) without the friction of sign-ups, trackers, or subscription walls. 
+> **Zero Friction. Zero Accounts. 100% Real Time Frame Sync.**
+> 
+> UI Live on GitHub Pages: [https://pheonix14.github.io/LiveDRIVE/](https://pheonix14.github.io/LiveDRIVE/)
 
----
-
-## 🚀 Key Features
-
-### 1. Zero-Friction Identity & Session Retention
-- **Anonymous Identity**: No sign-ins, credentials, or accounts. On first visit, a fun anonymous handle (e.g. `GhostReel_447`) and an accent color are silently auto-generated and saved in `localStorage`.
-- **Instant Load**: Nicknames render instantly in the navigation bar using inline script injections, eliminating page-load layout flickers.
-- **Robust Session Persistence**: Refreshing the browser or clicking browser back/forward buttons will not interrupt active room play. The app automatically recovers your current theater room session, chat log history, and exact video position.
-
-### 2. Premium Player Controls & Loop/Shuffle Toggles
-- **Loop Toggle**: Cycles through **No Loop** (plays once and stops), **Loop One** (repeats the current video forever), and **Loop All** (loops through the entire queue).
-- **Shuffle**: Play queue items in random order. The state is fully persisted and synced.
-- **Prev / Next Navigation**: Skips between items in the queue with dimming disabled logic when the queue is empty.
-
-### 3. Custom Draggable Queue (Playlist Panel)
-- **Overlay Layout**: Slides in from the right on desktop, and slides up as a bottom sheet taking 65% screen height on mobile devices.
-- **HTML5 Drag & Drop**: Drag rows to reorder items inside the queue instantly without any third-party frameworks. Reordering automatically corrects active indexing.
-- **Bouncing CSS Equalizer**: The currently playing item displays an animated 3-bar equalizer instead of its list number.
-- **Video Title Resolution**: Pasted YouTube URLs automatically fetch titles via a client-side `noembed.com` proxy wrapper to bypass CORS blocks. Vimeo and generic media files parse titles dynamically.
-- **Badge Indicators**: Color-coded badges highlight the source type (`YT` red, `VIMEO` blue, `DRIVE` gold, `HLS` green, `MP4` purple) with duration indicators.
-
-### 4. Interactive AWAKE Telemetry Watchdog
-- **Built-in Dashboard**: Access `/hook.html` to monitor targets, logs, inbound heartbeats, and dispatched pulses.
-- **Active Keep-Alives**: Starts background ping threads (`ping_loop` and `self_ping_loop`) on Flask launch, allowing the application to query and keep other Render, Replit, or custom containers awake via inbound and outbound HTTP heartbeats.
+LiveDRIVE is a privacy-first, zero-registration watch-together theater. Synchronize video playback from YouTube, Vimeo, direct MP4/WebM files, HLS live streams (`.m3u8`), and Google Drive with sub-second synchronization and real-time live chat.
 
 ---
 
-## 🛠️ Technology Stack & Architecture
+## 🏗️ Architecture
 
-- **Backend**: Python, Flask, Flask-SocketIO (for rooms management), `websockets` (for relay signaling).
-- **Frontend**: Vanilla HTML5, CSS3 transitions, TailwindCSS (dashboard sections), dynamic JavaScript. No build step or package installation required on the client side.
-- **Communication Channels**:
-  - **Socket.IO Room Server**: Syncs video playback play/pause/seek events and chat rooms.
-  - **WebSocket Signaling Relay**: A lightweight relay (`server.py`) for peer-to-peer sync commands.
+LiveDRIVE uses a decoupled architecture designed for zero hosting costs and maximum deployment flexibility:
+
+```
+┌────────────────────────────────────────────────────────┐
+│               GitHub Pages (Static UI)                 │
+│         Next.js 14 · Tailwind CSS · TypeScript         │
+│          https://pheonix14.github.io/LiveDRIVE/         │
+└───────────────────────────┬────────────────────────────┘
+                            │
+               WebSocket Signaling & Chat
+                            │
+       ┌────────────────────┼────────────────────┐
+       ▼                    ▼                    ▼
+┌──────────────┐     ┌──────────────┐     ┌──────────────┐
+│  Render.com  │     │Android Termux│     │   Local PC   │
+│ Cloud Relay  │     │ Mobile Relay │     │Windows/Linux │
+│ (Automatic   │     │ (Local WiFi  │     │ (Single-Cmd  │
+│     SSL)     │     │  or Tunnel)  │     │  setup.bat)  │
+└──────────────┘     └──────────────┘     └──────────────┘
+```
 
 ---
 
-## ⚙️ Quick Start
+## 🚀 Quick Launch Guide
 
-### 1. Install Dependencies
-Make sure you have Python installed, then run:
+### Option A: Use the GitHub Pages UI (Zero Install)
+1. Open the UI: [https://pheonix14.github.io/LiveDRIVE/](https://pheonix14.github.io/LiveDRIVE/)
+2. Click **Relay** in the top navigation bar to select your backend:
+   - **Render Cloud**: Connects to cloud relay with free automatic SSL.
+   - **Termux (Android)**: Connects to your phone relay.
+   - **Local PC**: Connects to `ws://localhost:8765`.
+   - **Public Mesh**: Connects to the free public mesh relay (zero setup).
+3. Create or join a room code and start watching together!
+
+---
+
+### Option B: Run Backend on Render.com (Free Cloud)
+1. Fork or clone this repository to GitHub.
+2. Go to [Render.com](https://render.com) $\to$ **New Web Service** $\to$ Connect this repository.
+3. Render automatically detects [`render.yaml`](render.yaml) and [`Dockerfile`](Dockerfile).
+4. Once deployed, copy your Render URL (e.g. `https://your-app.onrender.com`) and paste it into the LiveDRIVE UI **Relay** settings.
+
+---
+
+### Option C: Run Backend on Android (Termux)
+You can run the full signaling and room relay directly on your Android phone:
+1. Open **Termux** on Android and clone the repository:
+   ```bash
+   pkg update && pkg install git
+   git clone https://github.com/pheonix14/LiveDRIVE.git
+   cd LiveDRIVE
+   ```
+2. Launch the launcher:
+   ```bash
+   chmod +x termux-start.sh
+   ./termux-start.sh
+   ```
+3. The script prints your phone's WiFi IP (e.g. `192.168.1.50:8765`).
+4. In the GitHub Pages UI, click **Relay**, select **Termux**, and enter your phone's IP!
+
+---
+
+### Option D: Run on PC (Windows / Linux / macOS)
+
+#### Windows
+Run the automated installer:
+```cmd
+setup.bat
+```
+After setup, run convenience commands directly from any terminal:
+- `livedrive` or `ld` — Launch full stack or interactive menu
+- `ldui` — Launch Next.js UI dev server on `http://localhost:3000`
+- `ldcli` — Launch Python backend servers on ports `8765` and `8080`
+
+#### Linux / macOS
+Run the automated setup script:
 ```bash
-pip install flask flask-socketio eventlet websockets requests
+chmod +x setup.sh && ./setup.sh
 ```
-
-### 2. Run the Main Application Server
-Start the Flask + Socket.IO server on port 8080 (or custom environment port):
-```bash
-python main.py
-```
-
-### 3. Run the Websocket Relay Server
-Launch the signaling websocket relay on port 8765:
-```bash
-python server.py
-```
+Terminal commands `livedrive`, `ld`, `ldui`, and `ldcli` will be linked to `~/.local/bin/`.
 
 ---
 
-## 💛 Support & Open Source Sponsorship
+## 🛠️ Technology Stack
 
-LiveDRIVE is completely **open source** and **free to use**. We do not harvest, track, or sell your data. Maintaining our active watchdog telemetry loops and hosting signaling servers incurs ongoing bandwidth costs. 
+| Layer | Technologies |
+| :--- | :--- |
+| **Frontend UI** | Next.js 14, React 18, Tailwind CSS, Lucide Icons |
+| **Video decoders** | YouTube IFrame API, Vimeo Player API, Native HTML5 Video, HLS.js |
+| **Signaling Relay** | Python `websockets` (port 8765), `BroadcastChannel` (cross-tab P2P) |
+| **Room Server** | Python Flask, Flask-SocketIO (port 8080), Eventlet |
+| **Deployment** | GitHub Pages (UI), Render / Termux / Docker (Backend) |
 
-If LiveDRIVE makes your watch parties possible, consider supporting us:
+---
 
-### **Litecoin (LTC) Address**:
-```text
-ltc1q68v0ss6rjzt89rx4ll0e4c8fl657wej2lzngsg
-```
+## 📦 GitHub Releases & Artifacts
 
-### QR Scan Code:
-![Litecoin QR Code](https://github.com/user-attachments/assets/8d83b1e1-ae37-4502-a5d9-9a34b909f7bc)
+Every release includes standalone zip packages:
+1. `livedrive-backend.zip`: Portable Python backend for PC, Termux, and Render.
+2. `livedrive-static-ui.zip`: Pre-built static export ready to host on GitHub Pages or any static CDN.
+
+---
+
+## 💛 Support & Sponsorship
+
+LiveDRIVE is free, private, and open source. If LiveDRIVE makes your watch parties possible, consider supporting ongoing bandwidth and relay costs:
+
+**Litecoin (LTC)**: `ltc1q68v0ss6rjzt89rx4ll0e4c8fl657wej2lzngsg`
